@@ -15,6 +15,7 @@
 		771CAFD4224CC742000C7132 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 771CAFD2224CC742000C7132 /* LaunchScreen.storyboard */; };
 		771CAFDF224CC742000C7132 /* p11_textfieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771CAFDE224CC742000C7132 /* p11_textfieldTests.swift */; };
 		771CAFEA224CC742000C7132 /* p11_textfieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771CAFE9224CC742000C7132 /* p11_textfieldUITests.swift */; };
+		771CAFFA224CDD4B000C7132 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771CAFF9224CDD4B000C7132 /* TextFieldView.swift */; };
 		A9ABDC3C8311612920CFB934 /* Pods_p11_textfield.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A493091DEADCA46FB238787 /* Pods_p11_textfield.framework */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		771CAFE5224CC742000C7132 /* p11-textfieldUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "p11-textfieldUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		771CAFE9224CC742000C7132 /* p11_textfieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = p11_textfieldUITests.swift; sourceTree = "<group>"; };
 		771CAFEB224CC742000C7132 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		771CAFF9224CDD4B000C7132 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
 		8A493091DEADCA46FB238787 /* Pods_p11_textfield.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_p11_textfield.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAB7D140BF7ED89CDD91A0E4 /* Pods-p11-textfield.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-p11-textfield.release.xcconfig"; path = "Target Support Files/Pods-p11-textfield/Pods-p11-textfield.release.xcconfig"; sourceTree = "<group>"; };
 		D51625A442A88D729717BAA8 /* Pods_p11_textfieldTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_p11_textfieldTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +111,7 @@
 		771CAFC8224CC741000C7132 /* p11-textfield */ = {
 			isa = PBXGroup;
 			children = (
+				771CAFF8224CDD2C000C7132 /* Text Field */,
 				771CAFC9224CC741000C7132 /* AppDelegate.swift */,
 				771CAFCB224CC741000C7132 /* ViewController.swift */,
 				771CAFCD224CC741000C7132 /* Main.storyboard */,
@@ -137,6 +140,14 @@
 			path = "p11-textfieldUITests";
 			sourceTree = "<group>";
 		};
+		771CAFF8224CDD2C000C7132 /* Text Field */ = {
+			isa = PBXGroup;
+			children = (
+				771CAFF9224CDD4B000C7132 /* TextFieldView.swift */,
+			);
+			path = "Text Field";
+			sourceTree = "<group>";
+		};
 		C96A372458BDC509822C767D /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,7 +156,6 @@
 				76C431B5A3FC1449C1C284DC /* Pods-p11-textfieldTests.debug.xcconfig */,
 				4EC3F666AB6DF41C29442B8D /* Pods-p11-textfieldTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -402,6 +412,7 @@
 			files = (
 				771CAFCC224CC741000C7132 /* ViewController.swift in Sources */,
 				771CAFCA224CC741000C7132 /* AppDelegate.swift in Sources */,
+				771CAFFA224CDD4B000C7132 /* TextFieldView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
