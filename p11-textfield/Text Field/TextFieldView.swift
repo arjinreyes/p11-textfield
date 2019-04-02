@@ -10,30 +10,18 @@ import Foundation
 import SnapKit
 
 public class TextFieldView: UIView {
+    // MARK: - Private Properties
+    private var delegate: UITextFieldDelegate?
+    private var fieldProperties: TextFieldViewProperties?
     
-    let label: String = "Label"
-    var helpText: String = "Please use active email address"
-    var errorLabel: String = ""
-//    var errorIcon: UIImage = UIImage("")
-    // clear button
-    // validation icon
-    // line view
-    private var activeLabelColor = UIColor(red: 0.17, green: 0, blue: 0.88, alpha: 1)
-    private var bottomBorderColor: UIColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.7)
-    var helpTextColor = UIColor(red: 0.51, green: 0.6, blue: 0.63, alpha: 1)
-    var inputValidIcon = UIImage(named: "icon-green-check")
-    var errorIcon = UIImage(named: "icon-error")
-    var clearButtonLabel = "CLEAR"
-    var clearButtonColor = UIColor(red: 0.51, green: 0.6, blue: 0.63, alpha: 1)
-    var errorMessage = ""
-    
+    // MARK: - Subviews
     private let viewContainer: UIView = {
         let view: UIView = UIView()
         view.backgroundColor = UIColor.clear
         return view
     }()
     
-    private let titleLabel: UILabel = {
+    private let fieldLabel: UILabel = {
         let label: UILabel = UILabel()
         label.text = "Email"
         label.font = UIFont.systemFont(
@@ -53,7 +41,7 @@ public class TextFieldView: UIView {
     
     private lazy var horizontalLineView: UIView = {
         let view: UIView = UIView()
-        view.backgroundColor = self.bottomBorderColor
+        view.backgroundColor = self.fieldProperties?.bottomBorderColor
         return view
     }()
     
@@ -62,20 +50,20 @@ public class TextFieldView: UIView {
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
-        label.attributedText = NSMutableAttributedString(string: self.helpText,
+        label.attributedText = NSMutableAttributedString(string: self.fieldProperties?.helpText ?? "",
                                                       attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
         label.font = UIFont.systemFont(
             ofSize: 14.0,
             weight: UIFont.Weight.bold
         )
-        label.textColor = self.helpTextColor
+        label.textColor = self.fieldProperties?.helpTextColor
         label.textAlignment = .left
         return label
     }()
     
     private lazy var validationStatusIcon: UIImageView = {
         let imageView: UIImageView = UIImageView()
-        imageView.image = self.inputValidIcon
+        imageView.image = self.fieldProperties?.inputValidIcon
         return imageView
     }()
     
@@ -83,26 +71,22 @@ public class TextFieldView: UIView {
 
     private lazy var errorIconImageView: UIImageView = {
         let imageView: UIImageView = UIImageView()
-        imageView.image = self.errorIcon
+        imageView.image = self.fieldProperties?.errorIcon
         return imageView
     }()
     
     private lazy var errorMessageLabel: UILabel = {
         let label: UILabel = UILabel()
-        
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 3
-        label.attributedText = NSMutableAttributedString(string: self.helpText,
-                                                         attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+   
         label.font = UIFont.systemFont(
             ofSize: 14.0
         )
         label.textColor = UIColor.red
         label.textAlignment = .left
+        label.numberOfLines = 0
+        
         return label
     }()
-    
-
     
     private lazy var clearButton: UIButton = {
         let button: UIButton = UIButton()
@@ -111,33 +95,34 @@ public class TextFieldView: UIView {
             ofSize: 14.0,
             weight: UIFont.Weight.bold
         )
-        button.setTitle(self.clearButtonLabel, for: .normal)
-        button.setTitleColor(self.clearButtonColor, for: .normal)
+        button.setTitle(self.fieldProperties?.clearButtonLabel, for: .normal)
+        button.setTitleColor(self.fieldProperties?.clearButtonColor, for: .normal)
         button.titleLabel?.textAlignment = .right
+        button.addTarget(self, action: #selector(self.clearText), for: .touchUpInside)
+
         return button
     }()
     
-    
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(fieldProperties: TextFieldViewProperties, delegate: UITextFieldDelegate) {
+        super.init(frame: CGRect.zero)
         
-        self.textField.delegate = self
+        self.fieldProperties = fieldProperties
+        self.delegate = delegate
         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        fieldLabel.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = UIColor.white
-        self.addSubview(self.titleLabel)
+        self.addSubview(self.fieldLabel)
         self.addSubview(self.textField)
         self.addSubview(self.horizontalLineView)
         self.addSubview(self.validationStatusIcon)
         self.addSubview(self.helpTextLabel)
         self.addSubview(self.clearButton)
-
+        
         self.errorView.addSubview(self.errorIconImageView)
         self.errorView.addSubview(self.errorMessageLabel)
         self.addSubview(self.errorView)
-
-        self.titleLabel.snp.remakeConstraints { (make: ConstraintMaker) -> Void in
+        
+        self.fieldLabel.snp.remakeConstraints { (make: ConstraintMaker) -> Void in
             make.height.equalTo(23.0)
             
             if #available(iOS 11, *) {
@@ -151,7 +136,7 @@ public class TextFieldView: UIView {
         
         self.textField.snp.remakeConstraints { [unowned self] (make: ConstraintMaker) -> Void in
             make.height.equalTo(40.0)
-            make.top.equalTo(self.titleLabel.snp.bottom).offset(10.0)
+            make.top.equalTo(self.fieldLabel.snp.bottom).offset(10.0)
             make.leading.equalToSuperview().offset(35.0)
             make.trailing.equalToSuperview().inset(35.0)
         }
@@ -191,10 +176,11 @@ public class TextFieldView: UIView {
             make.leading.equalTo(self.textField)
             make.trailing.equalTo(self.textField)
         }
+        
         self.errorIconImageView.snp.remakeConstraints { [unowned self] (make: ConstraintMaker) -> Void in
             make.height.equalTo(18)
             make.width.equalTo(18)
-
+            
             make.top.equalToSuperview()
             make.leading.equalTo(self.errorView)
         }
@@ -208,6 +194,26 @@ public class TextFieldView: UIView {
         
         helpTextLabel.isHidden = true
         validationStatusIcon.isHidden = true
+        
+        setState(state: .empty)
+        self.textField.delegate = delegate
+    }
+    
+    private func setUpErrorDisplay(with message: String?) {
+        self.errorMessageLabel.text = message ?? nil
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 3
+        self.errorMessageLabel.attributedText = NSMutableAttributedString(string: message ?? "",
+        attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        self.errorView.isHidden = false
+        self.clearButton.isHidden = false
+        self.helpTextLabel.isHidden = true
+    }
+    
+    @objc func clearText(){
+        self.textField.text = nil
+        self.setState(state: .empty)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -219,8 +225,48 @@ public class TextFieldView: UIView {
     }
 }
 
-extension TextFieldView: UITextFieldDelegate {
+// MARK: Public APIs
+
+extension TextFieldView {
     
+    func setState(state: FieldState) {
+        self.errorView.isHidden = true
+        self.clearButton.isHidden = true
+        self.validationStatusIcon.isHidden = true
+        
+        switch state {
+        case .empty:
+            self.fieldLabel.textColor = self.fieldProperties?.defaultLabelColor
+            self.helpTextLabel.isHidden = true
+            self.validationStatusIcon.isHidden = true
+            self.errorView.isHidden = true
+            self.clearButton.isHidden = true
+            
+        case .editing:
+            self.fieldLabel.textColor = self.fieldProperties?.activeLabelColor
+            self.helpTextLabel.isHidden = false
+            
+        case .editingError(let error):
+            self.fieldLabel.textColor = self.fieldProperties?.activeLabelColor
+            self.setUpErrorDisplay(with: error)
+            
+        case .editingSuccess:
+            self.fieldLabel.textColor = self.fieldProperties?.activeLabelColor
+            self.validationStatusIcon.isHidden = false
+            self.helpTextLabel.isHidden = false
+            
+        case .filledError(let error):
+            self.fieldLabel.textColor = self.fieldProperties?.defaultLabelColor
+            self.setUpErrorDisplay(with: error)
+            
+        case .filledSuccess:
+            self.fieldLabel.textColor = self.fieldProperties?.defaultLabelColor
+            self.validationStatusIcon.isHidden = false
+            self.helpTextLabel.isHidden = true
+        }
+    }
 }
+
+
 
 
