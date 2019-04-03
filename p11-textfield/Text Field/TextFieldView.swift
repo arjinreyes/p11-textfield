@@ -213,7 +213,9 @@ public class TextFieldView: UIView {
     
     @objc func clearText(){
         self.textField.text = nil
-        self.setState(state: .empty)
+        self.textField.becomeFirstResponder()
+        self.setState(state: .editing)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
